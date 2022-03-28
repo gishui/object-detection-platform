@@ -12,7 +12,6 @@
     <el-container>
       <!-- 侧边栏 -->
       <el-aside :width="isCollapse?'64px':'200px'">
-        <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!-- 导航菜单 -->
         <el-menu background-color="#333744" text-color="#fff" active-text-color="#409bff" 
         unique-opened :collapse="isCollapse" :collapse-transition="false" router :default-active="$route.path">
@@ -35,8 +34,8 @@
             </el-menu-item>
 
           </el-submenu>
-        
         </el-menu>
+        <div class="toggle-button"  @click="toggleCollapse">|||</div>
       </el-aside>
       <!-- 主体内容区域 -->
       <el-main>
@@ -63,7 +62,7 @@ export default {
           {id:202,name:'功能二',path:"/f2"}]
         },
         /* path指定菜单栏路由跳转地址 router开启路由menu */
-        {id:102,name:'目标检测',children:[{id:203,name:'功能三',path:'/f3'}]},
+        {id:102,name:'目标检测',children:[{id:203,name:'图片检测',path:'/ImageDetection'}]},
         {id:103,name:'变化监测',children:[{id:204,name:'功能四',path:'/f4'}]},
         {id:104,name:'功能模块',children:[{id:205,name:'功能五',path:'/f5'}]}
       ],
@@ -116,6 +115,7 @@ export default {
     .el-menu{
       border-right: none;
     }
+    position: relative;
   }
   .el-main{
     background-color: #eaedf1;

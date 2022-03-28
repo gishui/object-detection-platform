@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './plugins/element.js'
+import $ from 'jquery'
 
 //引入全局样式表
 import './assets/css/global.css'

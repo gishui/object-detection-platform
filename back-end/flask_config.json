@@ -1,0 +1,17 @@
+{
+    "weights" : "weights/best.pt",
+    "device" : "cpu",
+    "source" : "./static/image",
+    "output" : "./static/output",
+    "imgsz" : 640,
+    "conf_thres" : 0.5,
+    "iou_thres" : 0.45,
+    "save_path":"./static/output/dectect_image.jpg",
+    "view_img" : false,
+    "save_img" : true,
+    "save_txt" : true,
+    "classes" : null,
+    "agnostic_nms" : false,
+    "augment" : false,
+    "update" : false
+}
