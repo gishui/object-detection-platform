@@ -1,5 +1,5 @@
 {
-    "weights" : "weights/best.pt",
+    "weights" : "weights/m_satellite.pt",
     "device" : "cpu",
     "source" : "./static/image",
     "output" : "./static/output",

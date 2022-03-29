@@ -1,1 +1,3 @@
-id2name2 = {0: 'airplane'}
+id2name2 = {
+    0: 'airplane'
+}

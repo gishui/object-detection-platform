@@ -60,37 +60,26 @@ export default {
     true_upload() {
       this.$refs.upload.click();
     },
+    //重新上传图片重置url方法
     repredict(){
       this.url_1='',
       this.url_2='',
       this.srcList1=[],
       this.srcList2=[]
     },
-    dataURLtoBlob(toDataURL) {
-				var arr = toDataURL
-					//mime = arr[0].match(/:(.*?);/)[1],
-					bstr = atob(arr[0]),
-					n = bstr.length,
-					//new ArrayBuffer(bstr.length) 这里有争议，加上后后面blob转化为formData 
-          //的时候不是乱码形式的流，可以看到类似于就是formData的格式，但是提交后后台给的url图片显示不出来。
-          //不使用呢看请求参数的时候就是一堆乱码流，但是后台接口能够通过它正常放回图片路径。
-          //之前由于不懂这里直接用网上的代码，哎  后面研究一下，这个就搞了差不多一天。
-          //所以建议new ArrayBuffer(bstr.length)  这个可以用于临时调试看参数。
-          //实际使用还是使用bstr.length这个吧
-					u8arr = new Uint8Array(n);
-				while (n--) {
-					u8arr[n] = bstr.charCodeAt(n);
-				}
-				return Blob([u8arr], {type: 'image/jpg'});
-		},
-
-    blobToFile(Blob, fileName) {
-				Blob.lastModifiedDate = new Date();
-				Blob.name = fileName;
-				return Blob;
-		},
-
-
+    SuccessTips(){
+       //预测成功弹框提示
+       /*  this.$notify({
+        title: "预测成功",
+        message: "点击图片可以查看大图",
+        duration: 0,
+        type: "success",
+      }); */
+      this.$message.success("检测成功！点击图片查看大图")
+    },
+    ErrorTips(){
+      this.$message.error("检测失败！请重新上传图片")
+    },
     /*  图片上传方法 */
     update(e){
         let file = e.target.files[0];
@@ -113,67 +102,15 @@ export default {
 
             this.url_2='data:image/jpg;base64,'+this.image_data
             this.srcList2.push(this.url_2)
+            this.SuccessTips() 
           })
           .catch(error => {
             console.log(error)
+            this.ErrorTips()
           })
         
       }    
     },
-    selectColor(index) {
-      var colors = ["blue", "fuchsia", "green", "lime", "maroon", "navy", 
-      "olive", "orange", "purple", "red", "silver", "teal", "white", "yellow", 
-      "aqua", "black", "gray"];
-      i = index % 18;
-      var color = colors[i];
-      return color;
-    },
-    DrawResult(results) {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(image, 0, 0);
-        var index = 0;
-        var totalClasses=new Array(); 
-        for(bboxInfo of results) { 
-          bbox = bboxInfo['bbox'];
-          class_name = bboxInfo['name'];
-          score = bboxInfo['conf'];
-
-          ctx.beginPath();
-          ctx.lineWidth="4";
-
-          if (totalClasses.includes(class_name) == false) 
-            {
-              totalClasses[index] = class_name;
-              index += 1;
-            }
-          //ctx.strokeStyle="red";
-          //ctx.fillStyle="red";
-          var i = totalClasses.indexOf(class_name)   // class_name 值的索引值
-          ctx.strokeStyle = selectColor(i);
-          ctx.fillStyle = selectColor(i);
-          
-          ctx.rect(bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1]);
-          ctx.stroke();
-          
-          ctx.font="20px Arial";
-          
-          let content = class_name + " " + parseFloat(score).toFixed(2);
-          ctx.fillText(content, bbox[0], bbox[1] < 20 ? bbox[1] + 30 : bbox[1]-5);
-       }
-    },
-    setup() {
-      // Make a detection with the default image
-      var canvasTmp = document.createElement("canvas");
-      canvasTmp.width = image.width;
-      canvasTmp.height = image.height;
-      var ctx = canvasTmp.getContext("2d");
-      ctx.drawImage(image, 0, 0);
-      var dataURL = canvasTmp.toDataURL("image/png");
-      communicate(dataURL)
-    }
   }
   
 }

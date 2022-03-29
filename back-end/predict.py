@@ -12,6 +12,7 @@ from utils.datasets import LoadStreams, LoadImages
 from utils.plots import Annotator, colors
 from flask_id2name import id2name
 from airplane import id2name2
+from dota_name import id2name3
 
 def predict(opt, model, img):
     out, source, view_img,save_path,save_img, save_txt, imgsz = \
@@ -80,7 +81,7 @@ def predict(opt, model, img):
                 for *xyxy, conf, cls in reversed(det):
                     xyxy_list = (torch.tensor(xyxy).view(1, 4)).view(-1).tolist()
                     #更换模型 标签不同更改id2name
-                    boxes_detected.append({"name": 'airplane',
+                    boxes_detected.append({"name": id2name3[int(cls.item())],
                                     "conf": str(conf.item()),
                                     "bbox": [int(xyxy_list[0]), int(xyxy_list[1]), int(xyxy_list[2]), int(xyxy_list[3])]
                                     })
