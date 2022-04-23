@@ -4,7 +4,7 @@
     <el-header>
       <div>
         <img src="../assets/home_logo.png" alt="" width="60px" height="60px">
-        <span>影像目标检测系统</span>
+        <span>无人机影像目标检测系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
     </el-header>
@@ -63,7 +63,7 @@ export default {
         },
         /* path指定菜单栏路由跳转地址 router开启路由menu */
         {id:102,name:'目标检测',children:[{id:203,name:'图片检测',path:'/ImageDetection'}]},
-        {id:103,name:'变化监测',children:[{id:204,name:'功能四',path:'/f4'}]},
+        {id:103,name:'变化监测',children:[{id:204,name:'目标查询',path:'/Canvas'}]},
         {id:104,name:'功能模块',children:[{id:205,name:'功能五',path:'/f5'}]}
       ],
       iconsObj:{

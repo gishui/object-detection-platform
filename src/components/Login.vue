@@ -31,7 +31,7 @@ data () {
         Login:{
         /* 登陆区域的的数据绑定 */
                 account:"admin",
-                password:"admin"
+                password:"admin123."
         },
         //表单验证规则对象
         LoginRules:{

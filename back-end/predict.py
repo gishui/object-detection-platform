@@ -81,9 +81,16 @@ def predict(opt, model, img):
                 for *xyxy, conf, cls in reversed(det):
                     xyxy_list = (torch.tensor(xyxy).view(1, 4)).view(-1).tolist()
                     #更换模型 标签不同更改id2name
-                    boxes_detected.append({"name": id2name3[int(cls.item())],
+                    boxes_detected.append({
+                                    "name": id2name3[int(cls.item())],
                                     "conf": str(conf.item()),
-                                    "bbox": [int(xyxy_list[0]), int(xyxy_list[1]), int(xyxy_list[2]), int(xyxy_list[3])]
+                                    "bbox": [int(xyxy_list[0]), int(xyxy_list[1]), int(xyxy_list[2]), int(xyxy_list[3])],
+                                    "size": str(int(xyxy_list[2])-int(xyxy_list[0]))+"x"+str(int(xyxy_list[3])-int(xyxy_list[1])),
+                                    "cordinate":{ "ld":[int(xyxy_list[0]),int(xyxy_list[1])],
+                                                  "rd":[int(xyxy_list[2]),int(xyxy_list[1])],
+                                                  "lu":[int(xyxy_list[0]),int(xyxy_list[3])],
+                                                  "ru":[int(xyxy_list[2]),int(xyxy_list[3])]}
+                                                    #四个角点坐标
                                     })
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
@@ -106,6 +113,6 @@ def predict(opt, model, img):
                 if dataset.mode == 'images':
                     cv2.imwrite(save_path, im0)
     #后台输出结果和时间
-    results = {"results": boxes_detected}
-    print(results,time.strftime('%Y.%m.%d',time.localtime(time.time())))
+    results = boxes_detected
+    print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     return results

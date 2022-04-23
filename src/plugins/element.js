@@ -5,7 +5,8 @@ import {
     Header,Aside,Main,Menu,MenuItem,Submenu,
     Breadcrumb,BreadcrumbItem,Card,Row,Col,
     Table,TableColumn,Switch,Tooltip,Pagination,
-    Upload,Image,Carousel,CarouselItem,Divider,Notification} from 'element-ui'
+    Upload,Image,Carousel,CarouselItem,Divider,
+    Notification,Backtop,Loading,Popover} from 'element-ui'
 
 Vue.use(Button)
 Vue.use(Form)
@@ -33,6 +34,11 @@ Vue.use(Image)
 Vue.use(Carousel)
 Vue.use(CarouselItem)
 Vue.use(Divider)
+Vue.use(Backtop)
+Vue.use(Loading)
+Vue.use(Popover)
+
+
 
 Vue.prototype.$message=Message
 Vue.prototype.$notify=Notification

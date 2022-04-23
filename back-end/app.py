@@ -52,16 +52,22 @@ def get_prediction():
     img.save(save_path) # 保存文件
     #img.save("./static/image/img4predict.jpg")  
 
+    #读取图片尺寸
+    w = img.width       #图片的宽
+    h = img.height      #图片的高
+    imageSize={"width":w,"height":h}
     # convert to numpy array.
     img_arr = np.array(img)
+    
     # print('img_arr shape = %s \n' % str(img_arr.shape))
     results = predict(opt, model, img_arr) # 预测图像
 
     with open('static/output/dectect_image.jpg', 'rb') as img_f:
         img_stream = base64.b64encode(img_f.read())
         dectect_image= img_stream.decode()
-    
-    return jsonify({'data':results,'image_url': dectect_image})
+    user_ip = request.remote_addr
+    print(user_ip)
+    return jsonify({'results':results,'image_url': dectect_image,"imageSize":imageSize})
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1')

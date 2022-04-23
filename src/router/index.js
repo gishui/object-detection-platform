@@ -6,6 +6,7 @@ import Home from '../components/Home.vue'
 import Welcome from '../components/welcome.vue'
 import Users from '../components/user/User.vue'
 import ImageDetection from '../components/detection/ImageDetection.vue'
+import Canvas from '../components/Canvas.vue'
 
 Vue.use(Router)
 axios.defaults.headers.post['Content-Type']='text/plain'
@@ -25,7 +26,7 @@ const router= new Router({
         {path:'/welcome',component:Welcome},
         {path:'/f1',component:Users},
         {path:'/f2',component:Users},
-        {path:'/f4',component:Users},
+        {path:'/Canvas',component:Canvas},
         {path:'/f5',component:Users},
         {path:'/ImageDetection',component:ImageDetection}
       ]}

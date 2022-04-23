@@ -2,13 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './plugins/element.js'
-import $ from 'jquery'
 
 //引入全局样式表
 import './assets/css/global.css'
 
 import axios from 'axios'
-
+import * as echarts from 'echarts'
+//局部或全局定义
+Vue.prototype.$echarts = echarts
 Vue.prototype.$http=axios
 
 /* 关闭生产提示 */
