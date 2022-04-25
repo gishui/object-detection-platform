@@ -84,9 +84,7 @@ export default {
     toggleCollapse(){
       this.isCollapse=!this.isCollapse; 
     }
-    
   }
-
 }
 </script>
 
@@ -95,7 +93,7 @@ export default {
     height: 100%;
   }
   .el-header{
-    background-color: #373d41;
+    background-color: #333744;
     display: flex;
     justify-content:space-between;
     padding-left: 0;

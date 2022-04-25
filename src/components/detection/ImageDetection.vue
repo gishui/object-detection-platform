@@ -6,7 +6,7 @@
               <el-button  @click="repredict" icon="el-icon-camera-solid">重新识别</el-button>
             </el-col>
              <el-col :span="6">
-              <el-button  @click="repredict" icon="el-icon-download">下载图片</el-button>
+              <el-button  @click="downloadresult" icon="el-icon-download">下载图片</el-button>
             </el-col>
             <el-col :span="6">
               <el-popover placement="bottom" trigger="click">
@@ -15,7 +15,7 @@
               </el-popover>
             </el-col>
              <el-col :span="6">
-              <el-button  @click="repredict" icon="el-icon-s-data">打印表格</el-button>
+              <el-button  @click="PrintTable" icon="el-icon-s-data">打印表格</el-button>
             </el-col>
           </el-row>
           <el-row :gutter="28">
@@ -55,7 +55,7 @@
       </el-card>
       
       <el-card>
-          <el-table :data="featureList" border stripe max-height="200">
+          <el-table :data="featureList.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border stripe max-height="200px">
             <el-table-column fixed="left" type="index" width="50px"></el-table-column>
             <el-table-column label="目标类别" prop="name">
               <template slot-scope="scope">
@@ -72,10 +72,16 @@
                 <span>{{ scope.row.conf }}</span>
               </template>        
             </el-table-column>
-             <el-table-column label="查询定位目标" fixed="right" width="100px">
+             <el-table-column fixed="right" width="200px" align="right">
+              <template slot="header">
+                <el-input
+                  v-model="search"
+                  size="mini"
+                  placeholder="输入关键字搜索"/>
+              </template>
               <template slot-scope="scope">
-             <el-button type="primary" icon="el-icon-location" size="mini"
-             @click="LocateObj(scope.$index, scope.row)"></el-button>
+                <el-button type="primary" icon="el-icon-location" size="mini"
+                @click="LocateObj(scope.$index, scope.row)"></el-button>
              </template>
             </el-table-column>
         </el-table>
@@ -92,7 +98,7 @@
 
 <script>
 import axios from 'axios'; 
-import echarts from 'echarts'
+import printJS from 'print-js'
 let Base64 = require('js-base64').Base64
 export default {
   data () {
@@ -110,17 +116,92 @@ export default {
       ImageWidth:'',
       ImageHeight:'',
       showcanvas:'flase',
-      loading: false
+      loading: false,
+      search: '',
+      classlist:[]
     }
   },
   created:function() {
       document.title = "无人机影像目标检测系统";
   },
   mounted () {
+      var datachart=document.getElementById('datachart')
+      datachart.style.height="300px"
+      datachart.style.width="500px"
   },
   methods: {
     true_upload() {
       this.$refs.upload.click();
+    },
+    downloadresult(){
+       
+       let a = document.createElement('a')
+       a.download = 'result.png'
+       a.href = this.url_2
+       a.click()
+    },
+    PrintTable(){
+      var data=[]
+      for (let i = 0; i < this.featureList.length; i++) {
+        data.push({
+          field1:i+1,
+          field2:this.featureList[i].name,
+          field3:this.featureList[i].size,
+          field4:this.featureList[i].conf
+        })
+        
+      }
+      printJS({
+	         printable:data,
+	         properties:[{
+	             field:'field1',
+	             displayName:'序号',
+	             columnSize:1
+	         },{
+	             field:'field2',
+	             displayName:'目标名称',
+	             columnSize:1
+	         },{
+	             field:'field3',
+	             displayName:'目标大小',
+	             columnSize:1
+	         },{
+	             field:'field4',
+	             displayName:'置信度',
+	             columnSize:1
+	         }],
+	         type:'json',
+           documentTitle:"目标检测结果",
+	         header:'目标检测结果',
+	         //样式设置
+	         gridStyle:'border:2px solid #3971A5;',
+	         gridHeaderStyle:'color:black; border:2px solid #3971A5;'
+	     })
+    },
+    DrawEcharts(){
+       var myChart = this.$echarts.init(datachart);
+        // 显示标题，图例和空的坐标轴
+            var option = {
+              title: {
+                text: '目标类别统计',
+                left: 'center'
+              },
+              tooltip: {
+                trigger: 'item'
+              },
+              legend: {
+                orient: 'vertical',
+                left: 'left'
+              },
+              series: [
+                {
+                  name:'ObjectName',
+                  type: 'pie',
+                  data: this.classlist
+                }
+              ]
+            };
+    myChart.setOption(option)
     },
     //重新上传图片重置url方法
     repredict(){
@@ -129,7 +210,8 @@ export default {
       this.srcList1=[],
       this.srcList2=[],
       this.featureList=[],
-      this.showcanvas='flase'
+      this.showcanvas='flase',
+      this.classlist=[]
     },
     SuccessTips(){
        //预测成功弹框提示
@@ -144,42 +226,8 @@ export default {
     ErrorTips(){
       this.$message.error("检测失败！请重新上传图片")
     },
-    DrawChart(){
-      var datachart=document.getElementById('datachart')
-      datachart.style.height="300px"
-      datachart.style.width="500px"
-      var myChart = this.$echarts.init(datachart);
-        // 显示标题，图例和空的坐标轴
-        myChart.option = {
-            series: [
-              {
-                type: 'pie',
-                data: [
-                  {
-                    value: 100,
-                    name: 'A'
-                  },
-                  {
-                    value: 200,
-                    name: 'B'
-                  },
-                  {
-                    value: 300,
-                    name: 'C'
-                  },
-                  {
-                    value: 400,
-                    name: 'D'
-                  },
-                  {
-                    value: 500,
-                    name: 'E'
-                  }
-                ],
-                roseType: 'area'
-              }
-          ]
-};
+    GetClassCount(){
+
     },
     LocateObj(index,row){
         
@@ -235,16 +283,16 @@ export default {
             this.ImageHeight=res.data.imageSize.height
             this.image_data=res.data.image_url
             //获取检测到的要素信息
-            this.featureList=res.data.results
+            this.featureList=res.data.results.boxes_detected
+            this.classlist=res.data.results.classdata
             this.loading=false
             //使用base64编码直接组装图片，加上编码格式头 可以直接解析图片
             this.url_2='data:image/jpg;base64,'+this.image_data
             this.srcList2.push(this.url_2)
             //设置canvas节点可见
             this.showcanvas='true'
+            this.DrawEcharts()
             this.SuccessTips() 
-            this.DrawChart()
-
           })
           .catch(error => {
             console.log(error)

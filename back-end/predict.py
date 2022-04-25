@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 
 import cv2
+from flask import jsonify
 import torch
 from numpy import random
 from utils.general import check_img_size, non_max_suppression, scale_coords, xyxy2xywh
@@ -70,12 +71,15 @@ def predict(opt, model, img):
             if det is not None and len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
-
+                classdata=[]
                 # Print results
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
                     s += '%g %ss, ' % (n, names[int(c)])  # add to string
-
+                    classdata.append({
+                        "name":names[int(c)],
+                        "value":int(n)
+                    })
                 # Write results
                 boxes_detected = [] #检测结果
                 for *xyxy, conf, cls in reversed(det):
@@ -113,6 +117,6 @@ def predict(opt, model, img):
                 if dataset.mode == 'images':
                     cv2.imwrite(save_path, im0)
     #后台输出结果和时间
-    results = boxes_detected
+    results = {"boxes_detected":boxes_detected,"classdata":classdata}
     print(time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
     return results
