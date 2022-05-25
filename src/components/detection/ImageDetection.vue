@@ -1,7 +1,7 @@
 <template>
   <div class="imagedetection_card">
-      <el-card>
-           <el-row>
+    <el-card>
+       <el-row>
             <el-col :span="6">
               <el-button  @click="repredict" icon="el-icon-camera-solid">重新识别</el-button>
             </el-col>
@@ -11,13 +11,15 @@
             <el-col :span="6">
               <el-popover placement="bottom" trigger="click">
                   <div id="datachart"></div>
-                 <el-button slot="reference" icon="el-icon-s-data">统计图表</el-button>
+                 <el-button slot="reference" icon="el-icon-pie-chart">统计图表</el-button>
               </el-popover>
             </el-col>
              <el-col :span="6">
-              <el-button  @click="PrintTable" icon="el-icon-s-data">打印表格</el-button>
+              <el-button  @click="PrintTable" icon="el-icon-printer">打印表格</el-button>
             </el-col>
           </el-row>
+    </el-card>
+      <el-card>
           <el-row :gutter="28">
              <el-col :span="12">
                 <el-image id="origin_Image" :src="url_1" :preview-src-list="srcList1">
@@ -55,7 +57,7 @@
       </el-card>
       
       <el-card>
-          <el-table :data="featureList.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border stripe max-height="200px">
+          <el-table :data="featureList.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))" border stripe max-height="420px">
             <el-table-column fixed="left" type="index" width="50px"></el-table-column>
             <el-table-column label="目标类别" prop="name">
               <template slot-scope="scope">
@@ -72,7 +74,7 @@
                 <span>{{ scope.row.conf }}</span>
               </template>        
             </el-table-column>
-             <el-table-column fixed="right" width="200px" align="right">
+             <el-table-column fixed="right" width="200px">
               <template slot="header">
                 <el-input
                   v-model="search"
@@ -133,8 +135,7 @@ export default {
     true_upload() {
       this.$refs.upload.click();
     },
-    downloadresult(){
-       
+    downloadresult(){  
        let a = document.createElement('a')
        a.download = 'result.png'
        a.href = this.url_2
@@ -284,6 +285,7 @@ export default {
             this.image_data=res.data.image_url
             //获取检测到的要素信息
             this.featureList=res.data.results.boxes_detected
+            //获取分类统计信息
             this.classlist=res.data.results.classdata
             this.loading=false
             //使用base64编码直接组装图片，加上编码格式头 可以直接解析图片
@@ -291,6 +293,7 @@ export default {
             this.srcList2.push(this.url_2)
             //设置canvas节点可见
             this.showcanvas='true'
+            //绘制图表
             this.DrawEcharts()
             this.SuccessTips() 
           })
@@ -301,7 +304,7 @@ export default {
       }    
     },
   }
-  
+ 
 }
 </script>
 
@@ -313,7 +316,7 @@ export default {
   }
   .el-image{
     width: 520px; 
-    height: 300px;
+    height: 435px;
     border-color: #01A9DB;
   }
   .image-slot{
